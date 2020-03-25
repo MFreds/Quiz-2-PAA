@@ -6,6 +6,17 @@ public class TicTacToe {
 	public boolean xTurn;
 
 	public int aiTurn;
+	
+  // 1.
+	public TicTacToe(int aiTurn) {
+		this.aiTurn = aiTurn;
+		xTurn = true;
+		board = new char[3][3];
+		for (int i = 0; i < board.length; i++)
+			for (int a = 0; a < board[i].length; a++)
+				board[i][a] = ' ';
+	}
+	
   
   // 2.
 	public static void printBoard(char[][] board) {
@@ -27,6 +38,18 @@ public class TicTacToe {
 	public static void main(String... pumpkins){
 	TicTacToe TTT = new TicTacToe(-1);
 	TTT.run();
+	}
+	
+  // 4.
+	public void run() {
+		System.out.println("\nWelcome to Tic Tac Toe!");
+
+		printBoard(board);
+		while (!gameOver(board)) {
+			playMove();
+			printBoard(board);
+		}
+		printResult();
 	}
 
   // 5.
@@ -93,6 +116,21 @@ public class TicTacToe {
 
 		return 0;
 	}
+	
+	
+  // 6.
+	public boolean gameOver(char[][] board) {
+		if (gameResult(board) != 0)
+			return true;
+
+		for (int i = 0; i < board.length; i++)
+			for (int a = 0; a < board[i].length; a++)
+				if (board[i][a] == ' ')
+					return false;
+
+		return true;
+	}
+	
 	
   // 7.
 	public void playMove() 
@@ -240,4 +278,75 @@ public class TicTacToe {
 
 		return new int[] {result, bestX, bestY};
 	}
+
+  // 13.
+        public boolean winPossible(char[][] board) {
+
+		char color;
+		int consecutive;
+		boolean emptyAdjacentSpot;
+
+		for (int i = 0; i < board.length; i++) {
+			consecutive = 0;
+			color = '?';
+			emptyAdjacentSpot = false;
+			for (int a = 0; a < board[i].length; a++)
+				if (board[i][a] == color)
+					consecutive++;
+				else if (board[i][a] == 'X' || board[i][a] == 'O') {
+					consecutive = 1;
+					color = board[i][a];
+				}
+				else emptyAdjacentSpot = true;
+			if (consecutive == 3 || (consecutive == 2 && emptyAdjacentSpot))
+				return true;
+		}
+
+		for (int a = 0; a < board[0].length; a++) {
+			consecutive = 0;
+			color = '?';
+			emptyAdjacentSpot = false;
+			for (int i = 0; i < board.length; i++)
+				if (board[i][a] == color)
+					consecutive++;
+				else if (board[i][a] == 'X' || board[i][a] == 'O') {
+					consecutive = 1;
+					color = board[i][a];
+				}
+				else emptyAdjacentSpot = true;
+			if (consecutive == 3 || (consecutive == 2 && emptyAdjacentSpot))
+				return true;
+		}
+
+		consecutive = 0;
+		color = '?';
+		emptyAdjacentSpot = false;
+		for (int i = 0, a = 0; i < board.length; i++, a++)
+			if (board[i][a] == color)
+				consecutive++;
+			else if (board[i][a] == 'X' || board[i][a] == 'O') {
+				consecutive = 1;
+				color = board[i][a];
+			}
+			else emptyAdjacentSpot = true;
+		if (consecutive == 3 || (consecutive == 2 && emptyAdjacentSpot))
+			return true;
+
+		consecutive = 0;
+		color = '?';
+		emptyAdjacentSpot = false;
+		for (int i = board.length - 1, a = 0; i >= 0; i--, a++)
+			if (board[i][a] == color)
+				consecutive++;
+			else if (board[i][a] == 'X' || board[i][a] == 'O') {
+				consecutive = 1;
+				color = board[i][a];
+			}
+			else emptyAdjacentSpot = true;
+		if (consecutive == 3 || (consecutive == 2 && emptyAdjacentSpot))
+			return true;
+
+		return false;
+	}
+}
 
