@@ -22,6 +22,12 @@ public class TicTacToe {
 		}
 		System.out.println();
 	}
+	
+  // 3.
+	public static void main(String... pumpkins){
+	TicTacToe TTT = new TicTacToe(-1);
+	TTT.run();
+	}
 
   // 5.
 	public int gameResult(char[][] board) {
@@ -87,6 +93,58 @@ public class TicTacToe {
 
 		return 0;
 	}
+	
+  // 7.
+	public void playMove() 
+{
+	if ((aiTurn == 1 && xTurn) || (aiTurn == -1 && !xTurn))
+		playMoveAI();
+	else {
+		Scanner keyboard = new Scanner(System.in);
+		int playerX, playerY;
+			do {
+				do  {
+					System.out.print("Enter an X coordinate:\t");
+					playerX = keyboard.nextInt();
+					}	
+				while (playerX < 0 || playerX >= board.length);
+
+				do  {
+					System.out.print("Enter a Y coordinate:\t");
+					playerY = keyboard.nextInt();
+					}	
+				while (playerY < 0 || playerY >= board[playerX].length);
+
+				if (board[playerY][playerX] != ' ')
+					System.out.println(playerX + " " + playerY + " is already occupied!");
+				}
+				while (board[playerY][playerX] != ' ');
+
+				board[playerY][playerX] = xTurn ? 'X':'O';
+		}
+		xTurn = !xTurn;
+}
+
+  // 8.
+	public void printResult() 
+{
+		System.out.println("\nGame Over!!!");
+		switch (gameResult(board)) 
+		{
+			case -1:
+				System.out.println("Circles won!");
+				break;
+			case 0:
+				System.out.println("Tie game!");
+				break;
+			case 1:
+				System.out.println("X's won!");
+				break;
+		}
+		System.out.println("\n");
+}
+
+
 
   // 9.
 	public void playMoveAI() {
@@ -149,3 +207,37 @@ public class TicTacToe {
 	}
 
 }
+
+  // 12.
+	public int[] alternateFindBestMove(char[][] board, boolean xTurn) {
+
+		if (gameOver(board))
+			return new int[] {gameResult(board), -1, -1};
+
+		int bestX = -1, bestY = -1, result = xTurn ? -1:1;
+
+		for (int i = 0; i < board.length; i++)
+			for (int a = 0; a < board[i].length; a++) {
+				if (board[i][a] != ' ')
+					continue;
+				
+				board[i][a] = xTurn ? 'X':'O';
+				int tempResult = alternateFindBestMove(board, !xTurn)[0];
+				board[i][a] = ' ';
+
+				
+				if ((xTurn && tempResult > result) || (!xTurn && tempResult < result)) {
+					bestX = i;
+					bestY = a;
+					result = tempResult;
+				}
+				else if (tempResult == result && Math.random() > 0.2) { // element of randomness, optional
+					bestX = i;
+					bestY = a;
+					result = tempResult;
+				}
+		}
+
+		return new int[] {result, bestX, bestY};
+	}
+
